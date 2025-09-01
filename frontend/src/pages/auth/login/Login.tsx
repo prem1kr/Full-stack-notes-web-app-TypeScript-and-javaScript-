@@ -93,7 +93,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <GoogleOAuthProvider >
+    <GoogleOAuthProvider clientId="386086154761-dvjjam5tiu6tummj6fjk3enmcflbu0f2.apps.googleusercontent.com"  >
       <div className="login-container">
         <div className="logo">
           <span className="spinner"></span>
