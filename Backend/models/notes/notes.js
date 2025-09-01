@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const NotesSchema = new mongoose.Schema({
     message:{type:String, require:true},
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true }, 
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, 
 
 });
 
