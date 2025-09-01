@@ -1,6 +1,5 @@
 import notesModel from "../../models/notes/notes.js";
 
-// Create Note
 export const NotesCreate = async (req, res) => {
   const { message } = req.body;
 
@@ -16,10 +15,9 @@ export const NotesCreate = async (req, res) => {
   }
 };
 
-// Get Notes
 export const NotesGet = async (req, res) => {
   try {
-    const userId = req.user.id; // must be before check
+    const userId = req.user.id;
     if (!userId) return res.status(400).json({ message: "UserId is required" });
 
     const get = await notesModel.find({ userId });
@@ -31,7 +29,6 @@ export const NotesGet = async (req, res) => {
   }
 };
 
-// Delete Note
 export const NotesDelete = async (req, res) => {
   const { id } = req.params;
   if (!id) return res.status(400).json({ message: "Note ID is required" });
@@ -52,7 +49,6 @@ export const NotesDelete = async (req, res) => {
   }
 };
 
-// Edit Note
 export const NotesEdit = async (req, res) => {
   const { id } = req.params;
   const { message } = req.body;
