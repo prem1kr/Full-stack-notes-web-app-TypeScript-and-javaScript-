@@ -36,27 +36,37 @@ const Dashboard: React.FC = () => {
       }
 
       try {
-        // ✅ Fetch profile
+        // Fetch user profile
         const profileRes = await axios.get(
           `https://notes-backend-63wv.onrender.com/api/profile/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        setUser(profileRes.data.user);
 
-        // ✅ Fetch notes with userId in query
+        // Backend returns profile data at root, adjust if needed
+        const profileData = profileRes.data.user || {
+          name: profileRes.data.message || "Unknown",
+          email: profileRes.data.email || "Not provided",
+          dob: profileRes.data.dob || "Not provided",
+        };
+
+        setUser(profileData);
+
+        // Fetch notes
         const notesRes = await axios.get(
           `https://notes-backend-63wv.onrender.com/api/notes/get?userId=${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const normalizedNotes = (notesRes.data.get || notesRes.data.notes || []).map(
-          (n: any) => ({
+        // Normalize notes to always be an array
+        const notesData = notesRes.data.get || notesRes.data.notes || notesRes.data;
+        const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
+
+        setNotes(
+          normalizedNotes.map((n: any) => ({
             _id: n._id,
             message: n.message,
-          })
+          }))
         );
-
-        setNotes(normalizedNotes);
       } catch (error) {
         console.error("Error fetching profile or notes:", error);
       } finally {
