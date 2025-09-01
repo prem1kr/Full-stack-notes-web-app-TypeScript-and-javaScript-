@@ -36,16 +36,27 @@ const Dashboard: React.FC = () => {
       }
 
       try {
+        // ✅ Fetch profile
         const profileRes = await axios.get(
           `http://localhost:5000/api/profile/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setUser(profileRes.data.user);
 
-        const notesRes = await axios.get("http://localhost:5000/api/notes/get", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setNotes(notesRes.data.get || []);
+        // ✅ Fetch notes with userId in query
+        const notesRes = await axios.get(
+          `http://localhost:5000/api/notes/get?userId=${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        const normalizedNotes = (notesRes.data.get || notesRes.data.notes || []).map(
+          (n: any) => ({
+            _id: n._id,
+            message: n.message,
+          })
+        );
+
+        setNotes(normalizedNotes);
       } catch (error) {
         console.error("Error fetching profile or notes:", error);
       } finally {
@@ -110,7 +121,6 @@ const Dashboard: React.FC = () => {
               >
                 View
               </button>
-            
             </div>
           ))
         )}
