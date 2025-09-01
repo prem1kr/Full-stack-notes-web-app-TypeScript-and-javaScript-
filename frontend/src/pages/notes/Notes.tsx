@@ -34,7 +34,7 @@ const Notes: React.FC = () => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/notes/get", {
+        const res = await axios.get("https://notes-backend-63wv.onrender.com/api/notes/get", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -58,7 +58,7 @@ const Notes: React.FC = () => {
     try {
       if (editingNoteId) {
         const res = await axios.put(
-          `http://localhost:5000/api/notes/edit/${editingNoteId}`,
+          `https://notes-backend-63wv.onrender.com/api/notes/edit/${editingNoteId}`,
           { message: newNote },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -76,7 +76,7 @@ const Notes: React.FC = () => {
         setNewNote("");
       } else {
         const res = await axios.post(
-          "http://localhost:5000/api/notes/create",
+          "https://notes-backend-63wv.onrender.com/api/notes/create",
           { message: newNote },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -92,7 +92,7 @@ const Notes: React.FC = () => {
 
   const handleDeleteNote = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notes/delete/${id}`, {
+      await axios.delete(`https://notes-backend-63wv.onrender.com/api/notes/delete/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
