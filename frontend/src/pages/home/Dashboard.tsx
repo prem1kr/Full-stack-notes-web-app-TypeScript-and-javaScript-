@@ -37,12 +37,12 @@ const Dashboard: React.FC = () => {
 
       try {
         const profileRes = await axios.get(
-          `http://localhost:5000/api/profile/${userId}`,
+          `https://notes-backend-63wv.onrender.com/api/profile/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setUser(profileRes.data.user);
 
-        const notesRes = await axios.get("http://localhost:5000/api/notes/get", {
+        const notesRes = await axios.get("https://notes-backend-63wv.onrender.com/api/notes/get", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setNotes(notesRes.data.get || []);
