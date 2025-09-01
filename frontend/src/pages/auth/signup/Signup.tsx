@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom"; 
 import SignupForm from "./SignupForm";
 import "../../styles/auth/signup/Signup.css";
 import img from "../../../assets/image.jpg";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +15,7 @@ const Signup: React.FC = () => {
 
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,6 +48,9 @@ const Signup: React.FC = () => {
         dob: formData.dob,
       });
       alert(res.data.message);
+      if (res.data.success) {
+        navigate("/login");
+      }
     } catch (err: any) {
       alert(err.response?.data?.message || "OTP verification failed");
     } finally {
