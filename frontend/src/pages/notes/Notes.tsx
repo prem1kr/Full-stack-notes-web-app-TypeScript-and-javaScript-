@@ -17,152 +17,113 @@ interface Note {
 const Notes: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNote, setNewNote] = useState("");
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
-  const [isReadOnly, setIsReadOnly] = useState(false); 
+  const [editId, setEditId] = useState<string | null>(null);
+
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
 
-  const location = useLocation();
-  const viewNote = (location.state as { note?: Note; readOnly?: boolean }) || {};
-
-  useEffect(() => {
-    if (viewNote.note) {
-      setNewNote(viewNote.note.message);
-      setIsReadOnly(viewNote.readOnly || false); 
-    }
-  }, [viewNote]);
-
+  // Fetch Notes
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/notes/get", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `https://notes-backend-63wv.onrender.com/api/notes/get?userId=${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-        const normalizedNotes = (res.data.get || res.data.notes || []).map((n: any) => ({
-          _id: n._id,
-          message: n.message,
-        }));
+        const normalizedNotes = (res.data.get || res.data.notes || res.data.data || []).map(
+          (n: any) => ({
+            _id: n._id,
+            message: n.message,
+          })
+        );
 
         setNotes(normalizedNotes);
       } catch (error) {
-        console.error(" Error fetching notes:", error);
+        console.error("❌ Error fetching notes:", error);
       }
     };
 
-    if (token) fetchNotes();
-  }, [token]);
+    if (token && userId) fetchNotes();
+  }, [token, userId]);
 
+  // Add or Edit Note
   const handleAddOrEditNote = async () => {
-    if (!newNote.trim()) return;
-
     try {
-      if (editingNoteId) {
-        const res = await axios.put(
-          `http://localhost:5000/api/notes/edit/${editingNoteId}`,
+      if (editId) {
+        // Update existing note
+        await axios.put(
+          `https://notes-backend-63wv.onrender.com/api/notes/edit/${editId}`,
           { message: newNote },
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const updatedNote = res.data.note || res.data.data;
         setNotes((prev) =>
           prev.map((note) =>
-            note._id === editingNoteId
-              ? { _id: updatedNote._id, message: updatedNote.message }
-              : note
+            note._id === editId ? { ...note, message: newNote } : note
           )
         );
-
-        setEditingNoteId(null);
-        setNewNote("");
+        setEditId(null);
       } else {
+        // Create new note with userId
         const res = await axios.post(
-          "http://localhost:5000/api/notes/create",
-          { message: newNote },
+          "https://notes-backend-63wv.onrender.com/api/notes/create",
+          { message: newNote, userId },
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
         const createdNote = res.data.note || res.data.data || res.data;
-        setNotes((prev) => [...prev, { _id: createdNote._id, message: createdNote.message }]);
-        setNewNote("");
+        setNotes((prev) => [
+          ...prev,
+          { _id: createdNote._id, message: createdNote.message },
+        ]);
       }
+
+      setNewNote("");
     } catch (error) {
-      console.error(" Error saving note:", error);
+      console.error("❌ Error saving note:", error);
     }
   };
 
-  const handleDeleteNote = async (id: string) => {
+  // Delete Note
+  const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notes/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      await axios.delete(
+        `https://notes-backend-63wv.onrender.com/api/notes/delete/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setNotes((prev) => prev.filter((note) => note._id !== id));
     } catch (error) {
-      console.error(" Error deleting note:", error);
+      console.error("❌ Error deleting note:", error);
     }
-  };
-
-  const handleEditNote = (note: Note) => {
-    setEditingNoteId(note._id);
-    setNewNote(note.message);
-    setIsReadOnly(false); 
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="notes-container">
-        <h2> My Notes</h2>
+    <div>
+      <h2>My Notes</h2>
 
-        <div className="note-input">
-          <textarea
-            placeholder="Write a note..."
-            value={newNote}
-            onChange={(e) => setNewNote(e.target.value)}
-            rows={1}
-            readOnly={isReadOnly}
-            className={isReadOnly ? "readonly-textarea" : ""}
-            onInput={(e) => {
-              const target = e.target as HTMLTextAreaElement;
-              target.style.height = "auto";
-              target.style.height = target.scrollHeight + "px";
-            }}
-          />
-
-          {isReadOnly ? (
-            <button className="edit-btn" onClick={() => setIsReadOnly(false)}>
-              <Edit /> Edit
-            </button>
-          ) : (
-            <button onClick={handleAddOrEditNote}>
-              {editingNoteId ? "💾 Save Note" : "➕ Add Note"}
-            </button>
-          )}
-        </div>
-
-        {!isReadOnly && (
-          <div className="notes-list">
-            {notes.length === 0 ? (
-              <p className="empty-msg">No notes yet. Create one!</p>
-            ) : (
-              notes.map((note) => (
-                <div key={note._id} className="note-card">
-                  <span className="notes-message">{note.message}</span>
-                  <div className="note-actions">
-                    <button className="edit-btn" onClick={() => handleEditNote(note)}>
-                      <Edit />
-                    </button>
-                    <button className="delete-btn" onClick={() => handleDeleteNote(note._id)}>
-                      <Trash />
-                    </button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+      <div>
+        <input
+          type="text"
+          value={newNote}
+          onChange={(e) => setNewNote(e.target.value)}
+          placeholder="Write a note"
+        />
+        <button onClick={handleAddOrEditNote}>
+          {editId ? "Update Note" : "Add Note"}
+        </button>
       </div>
-    </>
+
+      <ul>
+        {notes.map((note) => (
+          <li key={note._id}>
+            {note.message}
+            <button onClick={() => { setNewNote(note.message); setEditId(note._id); }}>Edit</button>
+            <button onClick={() => handleDelete(note._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
