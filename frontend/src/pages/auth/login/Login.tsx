@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     if (!formData.email) return alert("Please enter your email");
     setLoading(true);
     try {
-      const res = await axios.post("https://notes-backend-63wv.onrender.com/api/send-otp", {
+      const res = await axios.post("http://localhost:5000/api/send-otp", {
         email: formData.email,
       });
       alert(res.data.message);
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
     if (!formData.otp) return alert("Enter the OTP you received");
     setLoading(true);
     try {
-      const res = await axios.post("https://notes-backend-63wv.onrender.com/api/verify-otp", {
+      const res = await axios.post("http://localhost:5000/api/verify-otp", {
         email: formData.email,
         otp: formData.otp,
         remember: formData.remember,
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
     }
     setLoading(true);
     try {
-      const res = await axios.post("https://notes-backend-63wv.onrender.com/api/google-signup", {
+      const res = await axios.post("http://localhost:5000/api/google-signup", {
         token: credentialResponse.credential,
       });
 
@@ -93,7 +93,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId="386086154761-dvjjam5tiu6tummj6fjk3enmcflbu0f2.apps.googleusercontent.com"  >
+    <GoogleOAuthProvider clientId="">
       <div className="login-container">
         <div className="logo">
           <span className="spinner"></span>
