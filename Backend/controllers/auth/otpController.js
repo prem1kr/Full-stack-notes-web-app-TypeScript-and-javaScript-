@@ -15,12 +15,6 @@ export const sendOtp = async (req, res) => {
         .json({ message: "Email is required" });
     }
 
-    const user = await UserModel.findOne({ email });
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found. Please signup first." });
-    }
-
     const normalizedEmail = email.toLowerCase();
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
