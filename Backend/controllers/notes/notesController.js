@@ -17,15 +17,22 @@ export const NotesCreate = async (req, res) => {
 
 export const NotesGet = async (req, res) => {
   try {
+<<<<<<< HEAD
     const userId = req.query.userId; 
     if (!userId) return res.status(400).json({ message: "UserId is required" });
 
     const get = await notesModel.find({ userId });
+=======
+    const userId = req.user.id;
+    const get = await notesModel.find({ userId }); 
+    console.log(`Notes fetched successfully ${get}`);
+>>>>>>> 3ca3f0610ae1a228c975a94f529cd96627c395b8
     res.status(200).json({ message: "Notes fetched successfully", data: get });
   } catch (error) {
     console.log("Error fetching notes", error);
     res.status(500).json({ message: "Internal server error" });
   }
+<<<<<<< HEAD
 };
 
 
@@ -49,6 +56,30 @@ export const NotesDelete = async (req, res) => {
   }
 };
 
+=======
+};
+
+export const NotesDelete = async (req, res) => {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ message: "Note ID is required" });
+
+  try {
+    const userId = req.user.id;
+    const deletedNote = await notesModel.findOneAndDelete({ _id: id, userId });
+
+    if (!deletedNote) {
+      return res.status(404).json({ message: "Note not found or not authorized" });
+    }
+
+    console.log(`Note deleted successfully ${deletedNote}`);
+    res.status(200).json({ message: "Note deleted successfully", data: deletedNote });
+  } catch (error) {
+    console.error("Error during notes delete:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+>>>>>>> 3ca3f0610ae1a228c975a94f529cd96627c395b8
 export const NotesEdit = async (req, res) => {
   const { id } = req.params;
   const { message } = req.body;
