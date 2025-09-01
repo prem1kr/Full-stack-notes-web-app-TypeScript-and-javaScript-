@@ -1,10 +1,11 @@
 import notesModel from "../../models/notes/notes.js";
 
+// Create Note
 export const NotesCreate = async (req, res) => {
   const { message } = req.body;
 
   try {
-    const userId = req.user.id; 
+    const userId = req.user.id; // comes from auth middleware
     const add = await notesModel.create({ message, userId });
 
     console.log(`Notes created successfully: ${add}`);
@@ -15,14 +16,13 @@ export const NotesCreate = async (req, res) => {
   }
 };
 
+// Get Notes
 export const NotesGet = async (req, res) => {
   try {
-    const userId = req.query.userId; 
+    const userId = req.user.id; // must be before check
     if (!userId) return res.status(400).json({ message: "UserId is required" });
 
     const get = await notesModel.find({ userId });
-    const userId = req.user.id;
-    const get = await notesModel.find({ userId }); 
     console.log(`Notes fetched successfully ${get}`);
     res.status(200).json({ message: "Notes fetched successfully", data: get });
   } catch (error) {
@@ -31,7 +31,7 @@ export const NotesGet = async (req, res) => {
   }
 };
 
-
+// Delete Note
 export const NotesDelete = async (req, res) => {
   const { id } = req.params;
   if (!id) return res.status(400).json({ message: "Note ID is required" });
@@ -52,28 +52,7 @@ export const NotesDelete = async (req, res) => {
   }
 };
 
-};
-
-export const NotesDelete = async (req, res) => {
-  const { id } = req.params;
-  if (!id) return res.status(400).json({ message: "Note ID is required" });
-
-  try {
-    const userId = req.user.id;
-    const deletedNote = await notesModel.findOneAndDelete({ _id: id, userId });
-
-    if (!deletedNote) {
-      return res.status(404).json({ message: "Note not found or not authorized" });
-    }
-
-    console.log(`Note deleted successfully ${deletedNote}`);
-    res.status(200).json({ message: "Note deleted successfully", data: deletedNote });
-  } catch (error) {
-    console.error("Error during notes delete:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
+// Edit Note
 export const NotesEdit = async (req, res) => {
   const { id } = req.params;
   const { message } = req.body;
