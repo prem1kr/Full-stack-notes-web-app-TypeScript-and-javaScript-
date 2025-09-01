@@ -24,7 +24,7 @@ const Signup: React.FC = () => {
     if (!formData.email) return alert("Please enter your email");
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/send-otp", {
+      const res = await axios.post("https://notes-backend-63wv.onrender.com/api/send-otp", {
         email: formData.email,
       });
       alert(res.data.message);
@@ -40,7 +40,7 @@ const Signup: React.FC = () => {
     if (!formData.otp) return alert("Enter the OTP you received");
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/verify-otp", {
+      const res = await axios.post("https://notes-backend-63wv.onrender.com/api/verify-otp", {
         email: formData.email,
         otp: formData.otp,
         name: formData.name,
