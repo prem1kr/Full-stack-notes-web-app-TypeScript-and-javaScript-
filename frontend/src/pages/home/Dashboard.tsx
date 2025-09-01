@@ -36,7 +36,6 @@ const Dashboard: React.FC = () => {
       }
 
       try {
-        // Fetch user profile
         const profileRes = await axios.get(
           `https://notes-backend-63wv.onrender.com/api/profile/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -50,8 +49,7 @@ const Dashboard: React.FC = () => {
 
         setUser(profileData);
 
-        // Fetch notes
-       // Fetch notes
+        
 const notesRes = await axios.get(
   `https://notes-backend-63wv.onrender.com/api/notes/get`,
   {
@@ -60,7 +58,6 @@ const notesRes = await axios.get(
   }
 );
 
-// Backend returns notes in data field
 const notesData = notesRes.data.data || [];
 const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
 
