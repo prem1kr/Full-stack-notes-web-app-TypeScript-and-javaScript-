@@ -57,16 +57,20 @@ const Dashboard: React.FC = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        // Normalize notes to always be an array
-        const notesData = notesRes.data.get || notesRes.data.notes || notesRes.data;
-        const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
+              // Normalize notes to always be an array
+      const notesData = res.data.get || res.data.notes || res.data.note || res.data;
+      const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
 
-        setNotes(
-          normalizedNotes.map((n: any) => ({
-            _id: n._id,
-            message: n.message,
-          }))
-        );
+      // Filter out the message object if backend returned a message only
+      const filteredNotes = normalizedNotes.filter(n => n._id && n.message);
+
+      setNotes(
+        filteredNotes.map((n: any) => ({
+          _id: n._id,
+          message: n.message,
+        }))
+      );
+
       } catch (error) {
         console.error("Error fetching profile or notes:", error);
       } finally {
