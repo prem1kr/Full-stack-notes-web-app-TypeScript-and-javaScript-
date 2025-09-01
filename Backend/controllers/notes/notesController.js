@@ -18,7 +18,7 @@ export const NotesCreate = async (req, res) => {
 export const NotesGet = async (req, res) => {
   try {
     const userId = req.user.id;
-    const get = await notesModel.find({ userId }); // 🔥 filter by user
+    const get = await notesModel.find({ userId }); 
     console.log(`Notes fetched successfully ${get}`);
     res.status(200).json({ message: "Notes fetched successfully", data: get });
   } catch (error) {
