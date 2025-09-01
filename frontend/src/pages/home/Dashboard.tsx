@@ -51,24 +51,26 @@ const Dashboard: React.FC = () => {
         setUser(profileData);
 
         // Fetch notes
-        const notesRes = await axios.get(
-          `https://notes-backend-63wv.onrender.com/api/notes/get?userId=${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+       // Fetch notes
+const notesRes = await axios.get(
+  `https://notes-backend-63wv.onrender.com/api/notes/get`,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+    params: { userId },
+  }
+);
 
-        // Normalize notes to always be an array
-        const notesData = notesRes.data.get || notesRes.data.notes || notesRes.data.note || notesRes.data;
-        const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
+// Backend returns notes in data field
+const notesData = notesRes.data.data || [];
+const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
 
-        // Filter out any invalid objects (like message only)
-        const filteredNotes = normalizedNotes.filter((n: any) => n._id && n.message);
+setNotes(
+  normalizedNotes.map((n: any) => ({
+    _id: n._id,
+    message: n.message,
+  }))
+);
 
-        setNotes(
-          filteredNotes.map((n: any) => ({
-            _id: n._id,
-            message: n.message,
-          }))
-        );
       } catch (error) {
         console.error("Error fetching profile or notes:", error);
       } finally {
