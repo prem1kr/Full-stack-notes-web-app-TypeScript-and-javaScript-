@@ -1,11 +1,14 @@
 import express from "express";
 import { NotesCreate, NotesDelete, NotesEdit, NotesGet } from "../../controllers/notes/notesController.js";
+import { auth } from "../middleware/auth.js";
 
 const notesRouter = express.Router();
 
-notesRouter.post("/notes/create", NotesCreate);
-notesRouter.get("/notes/get", NotesGet);
-notesRouter.delete("/notes/delete/:id", NotesDelete);
-notesRouter.put("/notes/edit/:id", NotesEdit);
+
+router.post("/create", auth, NotesCreate);
+router.get("/get", auth, NotesGet);
+router.put("/edit/:id", auth, NotesEdit);
+router.delete("/delete/:id", auth, NotesDelete);
+
 
 export default notesRouter;
