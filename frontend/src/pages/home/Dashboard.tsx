@@ -22,11 +22,11 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState<Note[]>([]);
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchProfileAndNotes = async () => {
       const userId = localStorage.getItem("userId");
-      const token = localStorage.getItem("token");
 
       if (!userId || !token) {
         console.error("No userId or token found in localStorage");
@@ -42,7 +42,6 @@ const Dashboard: React.FC = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        // Backend returns profile data at root, adjust if needed
         const profileData = profileRes.data.user || {
           name: profileRes.data.message || "Unknown",
           email: profileRes.data.email || "Not provided",
@@ -57,20 +56,19 @@ const Dashboard: React.FC = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-              // Normalize notes to always be an array
-      const notesData = res.data.get || res.data.notes || res.data.note || res.data;
-      const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
+        // Normalize notes to always be an array
+        const notesData = notesRes.data.get || notesRes.data.notes || notesRes.data.note || notesRes.data;
+        const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
 
-      // Filter out the message object if backend returned a message only
-      const filteredNotes = normalizedNotes.filter(n => n._id && n.message);
+        // Filter out any invalid objects (like message only)
+        const filteredNotes = normalizedNotes.filter((n: any) => n._id && n.message);
 
-      setNotes(
-        filteredNotes.map((n: any) => ({
-          _id: n._id,
-          message: n.message,
-        }))
-      );
-
+        setNotes(
+          filteredNotes.map((n: any) => ({
+            _id: n._id,
+            message: n.message,
+          }))
+        );
       } catch (error) {
         console.error("Error fetching profile or notes:", error);
       } finally {
@@ -79,7 +77,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchProfileAndNotes();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const handleLogout = () => {
     localStorage.removeItem("userId");
