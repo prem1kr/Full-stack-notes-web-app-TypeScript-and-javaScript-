@@ -5,10 +5,10 @@ import { auth } from "../../middleware/auth.js";
 const notesRouter = express.Router();
 
 
-notesRouter.post("/create", auth, NotesCreate);
-notesRouter.get("/get", auth, NotesGet);
-notesRouter.put("/edit/:id", auth, NotesEdit);
-notesRouter.delete("/delete/:id", auth, NotesDelete);
+notesRouter.post("/notes/create", auth, NotesCreate);
+notesRouter.get("/notes/get", auth, NotesGet);
+notesRouter.put("/notes/edit/:id", auth, NotesEdit);
+notesRouter.delete("/notes/delete/:id", auth, NotesDelete);
 
 
 export default notesRouter;
