@@ -32,7 +32,7 @@ A full-stack **MERN (MongoDB, Express.js, React, Node.js)** based web applicatio
 ## 🛠️ Tech Stack
 
 **Frontend**
-- React (TypeScript + Vite)
+- React (TypeScript)
 - Axios (API calls)
 - React Router DOM
 - React Icons
@@ -91,13 +91,6 @@ Frontend/
 
 ---
 
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/your-username/notes-web-app.git
-cd notes-web-app
-````
 
 ### 2️⃣ Backend Setup
 
@@ -109,9 +102,19 @@ npm install
 Create a `.env` file in the **Backend** folder:
 
 ```
-MONGO_URL=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URL=
+JWT_SECRET=mysecretkey
 PORT=5000
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
+REDIS_URL=
+
+
+
 ```
 
 Start the backend server:
@@ -125,7 +128,7 @@ npm start
 ```bash
 cd Frontend
 npm install
-npm run dev
+npm start
 ```
 
 ---
@@ -134,8 +137,8 @@ npm run dev
 
 ### Auth
 
-* `POST /api/auth/signup` → Register user
-* `POST /api/auth/login` → Login user
+* `POST /api/signup` → Register user
+* `POST /api/login` → Login user
 
 ### Profile
 
@@ -145,29 +148,12 @@ npm run dev
 
 * `POST /api/notes/create` → Create a note
 * `GET /api/notes/get` → Get all notes
-* `PUT /api/notes/update/:id` → Update a note
+* `PUT /api/notes/edit/:id` → Update a note
 * `DELETE /api/notes/delete/:id` → Delete a note
 
 ---
 
-## 📸 Screenshots
 
-### Dashboard
-
-![Dashboard Screenshot](./screenshots/dashboard.png)
-
-### Create Note
-
-![Create Note Screenshot](./screenshots/create-note.png)
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome!
-For major changes, please open an issue first to discuss what you would like to change.
-
----
 
 
 
