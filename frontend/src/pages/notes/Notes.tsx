@@ -38,15 +38,16 @@ useEffect(() => {
       if (!userId) return;
 
       const res = await axios.get(
-        `https://notes-backend-63wv.onrender.com/api/notes/get?userId=${userId}`, 
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+  `https://notes-backend-63wv.onrender.com/api/notes/get`,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+    params: { userId },
+  }
+);
 
-      // Normalize notes to always be an array
       const notesData = res.data.get || res.data.notes || res.data.note || res.data;
       const normalizedNotes = Array.isArray(notesData) ? notesData : [notesData];
 
-      // Filter out the message object if backend returned a message only
       const filteredNotes = normalizedNotes.filter(n => n._id && n.message);
 
       setNotes(
