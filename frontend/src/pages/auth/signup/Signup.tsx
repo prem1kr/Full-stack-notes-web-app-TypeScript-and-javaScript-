@@ -48,9 +48,8 @@ const Signup: React.FC = () => {
         dob: formData.dob,
       });
       alert(res.data.message);
-      if (res.data.success) {
         navigate("/login");
-      }
+      
     } catch (err: any) {
       alert(err.response?.data?.message || "OTP verification failed");
     } finally {
