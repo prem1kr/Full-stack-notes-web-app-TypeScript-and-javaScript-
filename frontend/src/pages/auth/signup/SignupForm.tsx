@@ -44,7 +44,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
       <input
         type="text"
         name="name"
-        placeholder="Jonas Khanwald"
+        placeholder="prem kumar"
         value={formData.name}
         onChange={onChange}
         required
@@ -63,7 +63,7 @@ const SignupForm: React.FC<SignupFormProps> = ({
       <input
         type="email"
         name="email"
-        placeholder="jonas_kahnwald@gmail.com"
+        placeholder="premkm016@gmail.com"
         value={formData.email}
         onChange={onChange}
         required
