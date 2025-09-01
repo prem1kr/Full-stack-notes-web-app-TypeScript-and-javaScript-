@@ -4,7 +4,7 @@ export const NotesCreate = async (req, res) => {
   const { message } = req.body;
 
   try {
-    const userId = req.user.id; // 🔥 coming from auth middleware
+    const userId = req.user.id; 
     const add = await notesModel.create({ message, userId });
 
     console.log(`Notes created successfully: ${add}`);
